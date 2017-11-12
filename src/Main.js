@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import Paper from "paper";
-import TWEEN from "tween.js";
+import TWEEN from "@tweenjs/tween.js";
 import styles from "./styles/box.css";
 
 class Root extends React.Component {
