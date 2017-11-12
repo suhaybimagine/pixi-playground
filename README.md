@@ -30,3 +30,7 @@ Use the following command to bundle the application:
 ```sh
 npm run build
 ```
+
+### Need Help?
+
+If you are one of [Imagine Technologies](http://www.imagine.com.jo) developers please reach to [Suhayb Al-Absi](mailto:suhayb@imagine.com.jo). Otherwise, post an issue. ;)
