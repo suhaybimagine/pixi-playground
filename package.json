@@ -1,7 +1,7 @@
 {
-  "name": "imagination",
+  "name": "pixi-playground",
   "version": "1.0.0",
-  "description": "A sample project for building front-end tools",
+  "description": "Playground to try pixi.js features",
   "main": "Main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
