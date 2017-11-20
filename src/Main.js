@@ -67,7 +67,7 @@ new TWEEN.Tween(graph.position)
 
         app.stage.addChild(box);
     }
-
+    
     $("#canvas-container").on('mousewheel', function(e){
         let sc = app.stage.scale;
         let delY = e.originalEvent.deltaY;
