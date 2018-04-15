@@ -20,17 +20,22 @@ export function makeIndraggable(obj) {
 }
 
 function drag_downHandler(e) {
+    e.stopPropagation();
+    $("#canvas-container").css("pointer-events", "none");
+
     this.dragging = true;
     this.downPoint = e.data.getLocalPosition(this);
 }
 
 function drag_upHandler(e) {
+
+    $("#canvas-container").css("pointer-events", "auto");
     this.dragging = false;
     delete this.downPoint;
 }
 
 function drag_moveHandler(e) {
-
+    
     if (this.dragging) {
 
         let parent = this.parent;
@@ -38,8 +43,13 @@ function drag_moveHandler(e) {
         parent.setChildIndex(this, parent.children.length - 1);
 
         let loc = this.downPoint;
-        let gbl = e.data.global;
-        let pos = new Point(gbl.x / sc.x - loc.x, gbl.y / sc.y - loc.y);
+        let gbl = e.data.getLocalPosition(parent);
+        let prp = parent.position;
+
+        let pos = new Point(
+            gbl.x - loc.x, 
+            gbl.y - loc.y
+        );
         this.position = pos;
     }
 }
