@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import PIXI, { loader } from "pixi.js";
+import PIXI, { loader, Container } from "pixi.js";
 
 import TWEEN from "@tweenjs/tween.js";
 import styles from "./styles/box.css";
@@ -8,8 +8,12 @@ import { Application, Sprite, Graphics } from "pixi.js/lib/core";
 import * as interaction from "./Interaction";
 import Box from "./Box";
 import { Point, Rectangle } from "pixi.js/lib/core/math";
+import { print } from "util";
 
 let app = new Application({antialias: true});
+let root = new Container()
+app.stage.addChild(root);
+
 $("#canvas-container").append(app.view);
 
 app.renderer.backgroundColor = 0xffffee;
@@ -50,14 +54,7 @@ function initDiagram() {
     leaves.width = 50;
     leaves.height = 50;
 
-    // Add the bunny to the scene we are building.
-    app.stage.addChild(leaves);
-
-    /*
-new TWEEN.Tween(graph.position)
-.to({ x: 800, y: 600 }, 6000)
-.easing(TWEEN.Easing.Quadratic.Out)
-.start();*/
+    root.addChild(leaves);
 
     for(var i =0; i < 30; i++) {
 
@@ -65,18 +62,62 @@ new TWEEN.Tween(graph.position)
         box.x = Math.random() * window.innerWidth;
         box.y = Math.random() * window.innerHeight;
 
-        app.stage.addChild(box);
+        root.addChild(box);
     }
     
     $("#canvas-container").on('mousewheel', function(e){
-        let sc = app.stage.scale;
+        let sc = root.scale;
         let delY = e.originalEvent.deltaY;
 
         let tsc = sc.x + delY * 0.001;
-        if(tsc <= 5.0 && tsc >= 0.05) {
-            
+        if(tsc <= 5.0 && tsc >= 1.0) {
+
+            let locP = root.toLocal(new Point(e.clientX, e.clientY))
+            let scX = sc.x;
+            let scY = sc.y;
+
             sc.x = tsc;
             sc.y = tsc;
+
+            root.position.x -= (tsc - scX) * locP.x;
+            root.position.y -= (tsc - scY) * locP.y;
+        }
+    });
+
+    $("#canvas-container").on('mousedown', function(e){
+        this.down = true;
+        this.prevX = e.clientX;
+        this.prevY = e.clientY;
+    });
+
+    $("#canvas-container").on('mouseup', function(e){
+        this.down = false;
+    });
+
+    $("#canvas-container").on('mouseout', function(e){
+        this.down = false;
+    });
+
+    $("#canvas-container").on('mousemove', function(e){
+
+        if(this.down) {
+            
+            let dX = e.clientX - this.prevX;
+            let dY = e.clientY - this.prevY;
+
+            let tx = root.position.x + dX;
+            let ty = root.position.y + dY;
+
+            if (tx <= Math.abs(window.innerWidth - root.width)) {
+                root.position.x = tx;
+            }
+
+            if (ty <= Math.abs(window.innerHeight - root.height)) {
+                root.position.y = ty;
+            }
+            
+            this.prevX = e.clientX;
+            this.prevY = e.clientY;
         }
     });
 }
